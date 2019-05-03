@@ -24,10 +24,9 @@ public class HappyController {
     @GetMapping(value = {"/happyprime"})
     public
     @ResponseBody
-    ResponseEntity<Map<String, Object>> isHappyPrime() throws InterruptedException {
+    ResponseEntity<Map<String, Object>> isHappyPrime() {
         ResponseEntity<String> response = WebUtils.doGetString(randomServiceUrl);
         if (response.getStatusCode() == HttpStatus.OK){
-            System.out.println(response.getBody());
             int number = Integer.parseInt(response.getBody().trim());
             boolean isHappy = HappyUtils.isHappy(number);
             boolean isPrime = HappyUtils.isPrime(number);
@@ -54,7 +53,7 @@ public class HappyController {
     @GetMapping(value = {"/happyprime/{number}"})
     public
     @ResponseBody
-    ResponseEntity<Map<String, Object>> isHappyPrime(@PathVariable(value = "number") int number) throws InterruptedException {
+    ResponseEntity<Map<String, Object>> isHappyPrime(@PathVariable(value = "number") int number) {
         boolean isHappy = HappyUtils.isHappy(number);
         boolean isPrime = HappyUtils.isPrime(number);
         return new ResponseEntity<>(
