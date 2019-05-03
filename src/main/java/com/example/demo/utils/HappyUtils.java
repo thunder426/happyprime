@@ -7,6 +7,9 @@ import java.util.HashSet;
  */
 public class HappyUtils {
     public static boolean isHappy(int n){
+        if (n <= 0){
+            return false;
+        }
         HashSet<Integer> set = new HashSet<Integer>();
         while(!set.contains(n)){
             set.add(n);
@@ -18,7 +21,7 @@ public class HappyUtils {
         return false;
     }
 
-    private static int squaresum(int n){
+    public static int squaresum(int n){
         int sum = 0;
         while(n > 0){
             sum += (n%10)*(n%10);

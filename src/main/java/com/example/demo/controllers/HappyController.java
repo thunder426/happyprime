@@ -1,10 +1,8 @@
 package com.example.demo.controllers;
 
+import com.example.demo.services.RandomNumberService;
 import com.example.demo.utils.HappyUtils;
-import com.example.demo.utils.WebUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,16 +16,16 @@ import java.util.Map;
 @RestController()
 @RequestMapping(value = {"/v1/"})
 public class HappyController {
-    @Value("${randomServiceUrl}")
-    private String randomServiceUrl;
+
+    @Autowired
+    RandomNumberService randomNumberService;
 
     @GetMapping(value = {"/happyprime"})
     public
     @ResponseBody
     ResponseEntity<Map<String, Object>> isHappyPrime() {
-        ResponseEntity<String> response = WebUtils.doGetString(randomServiceUrl);
-        if (response.getStatusCode() == HttpStatus.OK){
-            int number = Integer.parseInt(response.getBody().trim());
+        int number = randomNumberService.getRandomNumber();
+        if (number != 0){
             boolean isHappy = HappyUtils.isHappy(number);
             boolean isPrime = HappyUtils.isPrime(number);
             return new ResponseEntity<>(
@@ -43,9 +41,9 @@ public class HappyController {
         else{
             return new ResponseEntity<>(
                     new HashMap<String, Object>() {{
-                        put("error", response.getBody());
+                        put("error", "Error getting random number.");
                     }},
-                    response.getStatusCode()
+                    HttpStatus.INTERNAL_SERVER_ERROR
             );
         }
     }
